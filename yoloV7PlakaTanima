@@ -1,0 +1,22 @@
+# Gerekli kütüphanelerin yüklenmesi
+!pip install -U torch torchvision
+!pip install opencv-python==4.9.0.80
+!git clone https://github.com/WongKinYiu/yolov7.git /content/drive/MyDrive/Colab\ Notebooks/Yolo_Plaka_Tanima/yolov7
+%cd /content/drive/MyDrive/Colab\ Notebooks/Yolo_Plaka_Tanima/yolov7
+
+# YOLOv7 modelinin ve önceden eğitilmiş ağırlıklarının indirilmesi
+!wget https://github.com/WongKinYiu/yolov7/releases/download/v0.1/yolov7.pt -O /content/drive/MyDrive/Colab\ Notebooks/Yolo_Plaka_Tanima/yolov7/yolov7.pt
+
+# Gerekli bağımlılıkların yüklenmesi
+!pip install -r requirements.txt
+
+!pip install roboflow
+
+from roboflow import Roboflow
+rf = Roboflow(api_key="dKSkYtRIx4GI9l9vZ8BK")
+project = rf.workspace("augmented-startups").project("vehicle-registration-plates-trudk")
+version = project.version(2)
+dataset = version.download("yolov7")
+
+%cd /content/drive/MyDrive/Colab Notebooks/Yolo_Plaka_Tanima/yolov7
+!python train.py --img 320 --batch 4 --epochs 2 --data "/content/drive/MyDrive/Colab Notebooks/Yolo_Plaka_Tanima/yolov7/Vehicle-Registration-Plates-2/data.yaml" --cfg "/content/drive/MyDrive/Colab Notebooks/Yolo_Plaka_Tanima/yolov7/cfg/training/yolov7.yaml" --weights 'yolov7.pt' --name yolov7-plaka --hyp "/content/drive/MyDrive/Colab Notebooks/Yolo_Plaka_Tanima/yolov7/data/hyp.scratch.custom.yaml"
